@@ -12,8 +12,12 @@ game_state.debug_info()
 game_state.protect_player("Betty")
 game_state.kill_player("Betty")
 game_state.debug_info()
-game_state.vote_player("Abigail")
-game_state.debug_info
+game_state.vote_player("Daniel", "Abigail")
+game_state.vote_player("Samuel", "Abigail")
+game_state.vote_player("William", "Abigail")
+game_state.vote_player("Ann", "Abigail")
+game_state.vote_player("Sarah", "Abigail")
+game_state.debug_info()
 
 
 

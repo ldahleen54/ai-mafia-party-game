@@ -22,4 +22,6 @@ There are commands that players can use to interact with the game mechanics
 !vote <name> allows players to vote on who they don't trust or who they want to kill
 
 # Architecture
-
+main.py
+game_state module handles the game state. Such as players alive, day counter, votes etc.
+message_parser module interprets messages for commands to change the game state and decide who can speak next
