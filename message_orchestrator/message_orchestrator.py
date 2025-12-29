@@ -1,0 +1,114 @@
+import random
+from game_state import game_state
+general_intro_file_path = '../prompts/general_intro.md'
+
+# Returns None if no command
+# Returns {"vote": <name>}
+# Returns {"speak": <name>}
+# Returns {"investigate": <name>}
+# Returns {"protect": <name>}
+def parse_commands(message):
+    message_list = message.split(" ")
+    if "!vote" in message_list:
+        vote = message_list.index("!vote")
+        if vote + 1 < len(message_list):
+            return {"vote": message_list[vote + 1]}
+    if "!speak" in message_list:
+        speak = message_list.index("!speak")
+        if speak + 1 < len(message_list):
+            return {"speak": message_list[speak + 1]}
+    if "!investigate" in message_list:
+        investigate = message_list.index("!investigate")
+        if investigate + 1 < len(message_list):
+            return {"investigate": message_list[investigate + 1]}
+    if "!protect" in message_list:
+        protect = message_list.index("!protect")
+        if protect + 1 < len(message_list):
+            return {"protect": message_list[protect + 1]}
+    if "!debug" in message_list:
+        game_state.debug_info()
+
+# Returns the result of the commands as a dictionary
+# "vote": "name"
+# "ended": Boolean
+# "error": "message"
+# "investigated": {"name": String, "mafia": Boolean}
+# "protect": "name"
+# only supports one command at a time
+def message(name, message):
+    commands = parse_commands(message)
+    result = {}
+    if game_state.get_time() == 'night':
+        result = night_commands(name, commands)
+    elif game_state.get_time() == 'day':
+        result = day_commands(name, commands)
+    else:
+        print("Error: Invalid time")
+    return result
+    
+
+# Returns the result of the commands as a dictionary
+# "vote": "name"
+# "ended": Boolean
+# "error": "message"
+# "investigated": {"name": String, "mafia": Boolean}
+# "protect": "name"
+# only supports one command at a time
+def night_commands(name, commands):
+    result = {}
+    if game_state.group_talking == "mafia" and "vote" in commands:
+        target = commands["vote"]
+        vote_status = game_state.mafia_vote_player(name, target)
+        if "ended" in vote_status and vote_status["ended"] == False:
+            result["vote"] = target
+            # Randomly chooose the next speaker based on who hasn't voted yet
+            game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+        elif "ended" in vote_status and vote_status["ended"] == True:
+            result["vote"] = target
+            result["ended"] = True
+            if "killed" in vote_status:
+                result["killed"] = commands["vote"]
+        elif "error" in vote_status:
+            result["error"] = vote_status["error"]
+            game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+    elif game_state.group_talking == "doctors" and name in game_state.get_doctors():
+        # If the doctor doesn't give a valid command just continue
+        if "protect" not in commands:
+            game_state.prepare_mafia()
+        else:
+            result["protect"] = commands["protect"]
+            game_state.protect(name, commands["protect"])
+    elif game_state.group_talking == "detectives" and "investigate" in commands and name in game_state.get_detectives():
+        is_mafia = game_state.investigate(name, commands["investigate"])
+        result["investigated"] = {commands["investigate"], is_mafia}
+    return result
+
+def day_commands(name, commands):
+    if "vote" in commands:
+        target = commands["vote"]
+        if target in game_state.get_players_alive():
+            response["vote"] = target
+            # let accused defend themselves
+            if game_state.get_votes(target) == 0:
+                response["speak"] = target
+                game_state.vote_player(name, target)
+    elif "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
+        result["speak"] = commands["speak"]
+    elif "investigate" in commands and time == "night":
+        response["investigate"] = commands["investigate"]
+    elif "protect" in commands and time == "night":
+        response["protect"] = commands["protect"]
+    # Randomly chooose the next speaker based on who hasn't voted yet
+    if "speak" not in response:
+        response["speak"] = random.choice(game_state.get_players_not_voted())
+    return response
+
+def get_general_info():
+    try:
+        with open(general_intro_file_path) as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: You do not have permission to read the file '{file_path}'.")

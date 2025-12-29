@@ -1,5 +1,7 @@
 from google import genai
-import game_state
+from game_state import game_state
+from message_orchestrator import message_orchestrator
+import random
 
 total_players = 10
 total_mafia_members = 3
@@ -10,12 +12,20 @@ game_state.debug_clear_mafia()
 game_state.debug_add_mafia("Cotton")
 game_state.debug_add_mafia("Ann")
 game_state.debug_add_mafia("Samuel")
-game_state.debug_info()
 game_state.next_night()
-game_state.debug_info()
-game_state.mafia_vote_player("Cotton", "William")
-game_state.mafia_vote_player("Ann", "Sarah")
-game_state.mafia_vote_player("Samuel", "Sarah")
+while(game_state.town_won == None):
+    if game_state.next_speaker == "":
+        print("ERROR Speaker not chosen")
+        exit()
+    if game_state.group_talking == "doctors":
+        player_message = input(f"hello you are the doctor it is your turn to speak {game_state.get_next_speaker()}")
+    elif game_state.group_talking == "mafia":
+        player_message = input(f"hello you are a member of the mafia it is your turn to speak {game_state.get_next_speaker()}")
+    elif game_state.group_talking == "detectives":
+        player_message = input(f"hello you are the detective it is your turn to speak {game_state.get_next_speaker()}")
+    response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
+    if "investigated" in response:
+        print(f"investigated: {response["investigated"]}")
 game_state.debug_info()
 
 # client = genai.Client()
