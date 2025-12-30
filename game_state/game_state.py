@@ -165,10 +165,10 @@ def next_day():
     time = "day"
     global town_won
     # Check if mafia won
-    if len(get_mafia_alive()) / len(get_players_alive) >= 0.5:
+    if len(get_mafia_alive()) / len(get_players_alive()) >= 0.5:
         town_won = False
     # check if town won
-    if len(get_mafia_alive) <= 0 and len(get_players_alive) > 0:
+    if len(get_mafia_alive()) <= 0 and len(get_players_alive()) > 0:
         town_won = True
 
 def prepare_doctors():
@@ -195,7 +195,7 @@ def prepare_detectives():
     global players_not_voted
     players_not_voted = get_detectives_alive()
     global next_speaker
-    if len(get_detectives_alive()) >= 0:
+    if len(players_not_voted) >= 0:
         next_speaker = players_not_voted[0]
     global group_talking
     group_talking = "detectives"
