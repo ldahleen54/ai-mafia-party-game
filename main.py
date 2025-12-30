@@ -17,15 +17,18 @@ while(game_state.town_won == None):
     if game_state.next_speaker == "":
         print("ERROR Speaker not chosen")
         exit()
-    if game_state.group_talking == "doctors":
-        player_message = input(f"hello you are the doctor it is your turn to speak {game_state.get_next_speaker()}")
-    elif game_state.group_talking == "mafia":
-        player_message = input(f"hello you are a member of the mafia it is your turn to speak {game_state.get_next_speaker()}")
-    elif game_state.group_talking == "detectives":
-        player_message = input(f"hello you are the detective it is your turn to speak {game_state.get_next_speaker()}")
-    response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
-    if "investigated" in response:
-        print(f"investigated: {response["investigated"]}")
+    if game_state.time == "night":
+        if game_state.group_talking == "doctors":
+            player_message = input(f"hello you are the doctor it is your turn to speak {game_state.get_next_speaker()}")
+        elif game_state.group_talking == "mafia":
+            player_message = input(f"hello you are a member of the mafia it is your turn to speak {game_state.get_next_speaker()}")
+        elif game_state.group_talking == "detectives":
+            player_message = input(f"hello you are the detective it is your turn to speak {game_state.get_next_speaker()}")
+        response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
+        if "investigated" in response:
+            print(f"investigated: {response["investigated"]}")
+    elif game_state.time == "day":
+        player_message = input(f"time is now day. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
 game_state.debug_info()
 
 # client = genai.Client()

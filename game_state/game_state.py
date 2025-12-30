@@ -1,8 +1,12 @@
 import random
+# Constants
 VOTES_RESET = {'Cotton': 0, 'John': 0, 'Samuel': 0, 'William': 0, 'Abigail': 0, 'Ann': 0, 'Betty': 0, 'Sarah': 0, 'Daniel': 0, 'Timothy': 0}
 CHAT_HISTORY_RESET = {'Cotton': '', 'John': '', 'Samuel': '', 'William': '', 'Abigail': '', 'Ann': '', 'Betty': '', 'Sarah': '', 'Daniel': '', 'Timothy': ''}
+
+# Globals
 chat_history = {}
 players_alive = ["Cotton", "John", "Samuel", "William", "Abigail", "Ann", "Betty", "Sarah", "Daniel", "Timothy"]
+speak_forced = {}
 players_not_voted = []
 day_counter = 0
 votes = {}
@@ -46,7 +50,6 @@ def start(total_players, total_mafia, total_detectives, total_doctors):
         player_selection.remove(selected_player)
         global doctors
         doctors.append(selected_player)
-
     # set the votes to 0
     global votes
     votes = VOTES_RESET
@@ -151,6 +154,8 @@ def next_night():
     players_not_voted = get_mafia_alive().copy()
     global time
     time = "night"
+    global speak_forced
+    speak_forced = VOTES_RESET.copy()
 
 def next_day():
     global day_counter
@@ -170,6 +175,8 @@ def next_day():
     # check if town won
     if len(get_mafia_alive()) <= 0 and len(get_players_alive()) > 0:
         town_won = True
+    global speak_forced
+    speak_forced = VOTES_RESET.copy()
 
 def prepare_doctors():
     global players_not_voted
@@ -195,11 +202,12 @@ def prepare_detectives():
     global players_not_voted
     players_not_voted = get_detectives_alive()
     global next_speaker
-    if len(players_not_voted) >= 0:
+    if len(players_not_voted) > 0:
         next_speaker = players_not_voted[0]
-    global group_talking
-    group_talking = "detectives"
-
+        global group_talking
+        group_talking = "detectives"
+    else:
+        next_day()
 
 def investigate(name, target):
     global players_not_voted
@@ -241,7 +249,9 @@ def debug_info():
     global group_talking
     print(f"group_talking: {group_talking}")
     global doctors
-    print(doctors)
+    print(f"doctors: {doctors}")
+    global detectives
+    print(f"detectives: {detectives}")
 
 def debug_add_mafia(name):
     global mafia_members
