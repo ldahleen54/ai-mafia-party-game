@@ -58,19 +58,7 @@ def night_commands(name, commands):
     result = {}
     if game_state.group_talking == "mafia" and "vote" in commands:
         target = commands["vote"]
-        vote_status = game_state.mafia_vote_player(name, target)
-        if "ended" in vote_status and vote_status["ended"] == False:
-            result["vote"] = target
-            # Randomly chooose the next speaker based on who hasn't voted yet
-            game_state.next_speaker = random.choice(game_state.get_players_not_voted())
-        elif "ended" in vote_status and vote_status["ended"] == True:
-            result["vote"] = target
-            result["ended"] = True
-            if "killed" in vote_status:
-                result["killed"] = commands["vote"]
-        elif "error" in vote_status:
-            result["error"] = vote_status["error"]
-            game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+        result = game_state.mafia_vote_player(name, target)
     elif game_state.group_talking == "doctors" and name in game_state.get_doctors():
         # If the doctor doesn't give a valid command just continue
         if "protect" not in commands:

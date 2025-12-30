@@ -4,7 +4,7 @@ CHAT_HISTORY_RESET = {'Cotton': '', 'John': '', 'Samuel': '', 'William': '', 'Ab
 chat_history = {}
 players_alive = ["Cotton", "John", "Samuel", "William", "Abigail", "Ann", "Betty", "Sarah", "Daniel", "Timothy"]
 players_not_voted = []
-day_counter = 1
+day_counter = 0
 votes = {}
 mafia_members = []
 protected_players = []
@@ -65,15 +65,6 @@ def lynch_player(name):
     else:
         return False
 
-def protect_player(name):
-    # Check if player name is valid
-    if name not in players_alive:
-        print("Error: Player name is invalid")
-        return False
-    else:
-        protected_players.append(name)
-        return True
-
 # Returns object {"lynch": Boolean, "mafia": Boolean or None, "invalid": Boolean}
 def vote_player(voter, name):
     if voter not in players_not_voted:
@@ -118,14 +109,19 @@ def mafia_vote_player(voter, name):
     votes[name] = votes[name] + 1
     if votes[name] / len(mafia_members) > 0.5:
         attempt = kill_player(name)
+        prepare_detectives()
         if attempt == True:
             return {"ended": True, "killed": name}
         else:
             return {"ended": True}
-        prepare_detectives()
     if len(players_not_voted) <= 0:
+        prepare_detectives()
         return {"ended": True}
-    return {"ended": False}
+    else:
+        print(f"here are the playes not voted {get_players_not_voted()}")
+        global next_speaker
+        next_speaker = random.choice(get_players_not_voted())
+        return {"ended": False}
 
 # Returns True if player is killed
 # Returns False if player cannot be killed
@@ -199,7 +195,7 @@ def prepare_detectives():
     global players_not_voted
     players_not_voted = get_detectives_alive()
     global next_speaker
-    if len(get_detectives_alive) >= 0:
+    if len(get_detectives_alive()) >= 0:
         next_speaker = players_not_voted[0]
     global group_talking
     group_talking = "detectives"
@@ -208,9 +204,7 @@ def prepare_detectives():
 def investigate(name, target):
     global players_not_voted
     players_not_voted.remove(name)
-    # check if investigations are complete
-    # if len(players_not_voted) <= 0:
-    #     prepare_mafia()
+    next_day()
     return target in mafia_members
 
 def protect(name, target):
