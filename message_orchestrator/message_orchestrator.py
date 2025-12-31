@@ -73,9 +73,12 @@ def night_commands(name, commands):
         else:
             result["protect"] = commands["protect"]
             game_state.protect(name, commands["protect"])
-    elif game_state.group_talking == "detectives" and "investigate" in commands and name in game_state.get_detectives():
-        is_mafia = game_state.investigate(name, commands["investigate"])
-        result["investigated"] = {commands["investigate"]: is_mafia}
+    elif game_state.group_talking == "detectives": 
+        if commands != None and "investigate" in commands and name in game_state.get_detectives(): 
+            is_mafia = game_state.investigate(name, commands["investigate"])
+            result["investigated"] = {commands["investigate"]: is_mafia}
+        else:
+            game_state.next_day()
     return result
 
 def day_commands(name, commands):
@@ -83,17 +86,17 @@ def day_commands(name, commands):
     if commands != None and "vote" in commands:
         target = commands["vote"]
         if target in game_state.get_players_alive():
-            response["vote"] = target
+            result["vote"] = target
             # let accused defend themselves
             if game_state.get_votes(target) == 0:
-                response["speak"] = target
                 game_state.vote_player(name, target)
-    elif "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
-        result["speak"] = commands["speak"]
-    # Randomly chooose the next speaker based on who hasn't voted yet
-    if "speak" not in response:
-        response["speak"] = random.choice(game_state.get_players_not_voted())
-    return response
+                game_state.next_speaker = target
+    elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
+        game_state.next_speaker = commands["speak"]
+        speak_forced[commands["speak"]] = speak_forced[commands["speak"]] + 1
+    else:
+        game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+    return result
 
 # def get_general_info():
 #     try:
