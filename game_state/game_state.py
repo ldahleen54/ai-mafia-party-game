@@ -70,12 +70,18 @@ def lynch_player(name):
 
 # Returns object {"lynch": Boolean, "mafia": Boolean or None, "invalid": Boolean}
 def vote_player(voter, name):
+    print(f"vote_player ({voter}, {name})")
+    global players_not_voted
     if voter not in players_not_voted:
         print(f"Error: Voter {voter} already voted")
         return {"lynch": False, "mafia": None, "invalid": True}
+    debug_info()
     players_not_voted.remove(voter)
-    if name not in players_alive:
-        print("Error: Player name is invalid")
+    print("voter just removed")
+    debug_info()
+    global players_alive
+    if name not in players_alive or voter not in players_alive:
+        print("Error: Either the voter or name are invalid")
         return {"lynch": False, "mafia": None, "invalid": True}
     else:
         global votes
@@ -163,7 +169,7 @@ def next_day():
     global protected_players
     protected_players = []
     global players_not_voted
-    players_not_voted = get_players_alive()
+    players_not_voted = get_players_alive().copy()
     global votes
     votes = VOTES_RESET.copy()
     global time
