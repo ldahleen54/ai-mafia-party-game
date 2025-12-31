@@ -52,7 +52,7 @@ def start(total_players, total_mafia, total_detectives, total_doctors):
         doctors.append(selected_player)
     # set the votes to 0
     global votes
-    votes = VOTES_RESET
+    votes = VOTES_RESET.copy()
     global chat_history
     chat_history = CHAT_HISTORY_RESET
     next_night()
@@ -62,7 +62,7 @@ def start(total_players, total_mafia, total_detectives, total_doctors):
 def lynch_player(name):
     global players_alive
     players_alive.remove(name)
-    votes = VOTES_RESET
+    votes = VOTES_RESET.copy()
     if name in get_mafia_alive():
         return True
     else:
@@ -145,7 +145,7 @@ def kill_player(name):
 
 def next_night():
     global votes
-    votes = VOTES_RESET
+    votes = VOTES_RESET.copy()
     global protected_players
     protected_players = []
     global player_killed_last_night
@@ -165,7 +165,7 @@ def next_day():
     global players_not_voted
     players_not_voted = get_players_alive()
     global votes
-    votes = VOTES_RESET
+    votes = VOTES_RESET.copy()
     global time
     time = "day"
     global town_won
@@ -228,18 +228,23 @@ def protect(name, target):
 # DEBUG
 def debug_info():
     print("DEBUG: Players still alive: ")
+    global players_alive
     for name in players_alive:
         print(name)
     print("DEBUG: The mafia members are")
+    global mafia_members
     for name in mafia_members:
         print(name)
     print("Debug: Protected players")
+    global protected_players
     for name in protected_players:
         print(name)
     print("Debug: Players not voted")
+    global players_not_voted
     for name in players_not_voted:
         print(name)
     print("Debug: Votes")
+    global votes
     for key in votes:
         print(key)
         print(votes.get(key))
