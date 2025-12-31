@@ -1,6 +1,5 @@
 import random
 from game_state import game_state
-general_intro_file_path = '../prompts/general_intro.md'
 
 # Returns None if no command
 # Returns {"vote": <name>}
@@ -92,13 +91,3 @@ def day_commands(name, commands):
     else:
         game_state.next_speaker = random.choice(game_state.get_players_not_voted())
     return result
-
-# def get_general_info():
-#     try:
-#         with open(general_intro_file_path) as file:
-#             content = file.read()
-#             return content
-#     except FileNotFoundError:
-#         print(f"Error: The file '{file_path}' was not found.")
-#     except PermissionError:
-#         print(f"Error: You do not have permission to read the file '{file_path}'.")
