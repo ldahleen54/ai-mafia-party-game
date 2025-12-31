@@ -12,7 +12,6 @@ game_state.debug_clear_mafia()
 game_state.debug_add_mafia("Cotton")
 game_state.debug_add_mafia("Ann")
 game_state.debug_add_mafia("Samuel")
-game_state.next_night()
 while(game_state.town_won == None):
     if game_state.next_speaker == "":
         print("ERROR Speaker not chosen")
@@ -30,6 +29,12 @@ while(game_state.town_won == None):
     elif game_state.time == "day":
         player_message = input(f"time is now day. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
         response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
+        if "lynch" in response and response["lynch"] == True:
+            print(f"{response["name"]} has been lynched")
+            if response["mafia"] == True:
+                print(f"{response["name"]} was mafia")
+            else:
+                print(f"{response["name"]} was not mafia")
 game_state.debug_info()
 
 # client = genai.Client()

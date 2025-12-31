@@ -56,7 +56,6 @@ def message(name, message):
 # only supports one command at a time
 def night_commands(name, commands):
     result = {}
-
     if game_state.group_talking == "mafia":
         if commands != None and "vote" in commands:
             target = commands["vote"]
@@ -85,9 +84,8 @@ def day_commands(name, commands):
     result = {}
     if commands != None and "vote" in commands:
         target = commands["vote"]
-        if target in game_state.get_players_alive():
-            result["vote"] = target
-            game_state.vote_player(name, target)
+        result["vote"] = target
+        game_state.vote_player(name, target)
     elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
         game_state.next_speaker = commands["speak"]
         game_state.speak_forced[commands["speak"]] = game_state.speak_forced[commands["speak"]] + 1

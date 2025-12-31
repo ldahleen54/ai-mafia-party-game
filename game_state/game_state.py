@@ -56,14 +56,16 @@ def start(total_players, total_mafia, total_detectives, total_doctors):
     global chat_history
     chat_history = CHAT_HISTORY_RESET
     next_night()
-    prepare_doctors()
 
 # returns boolean whether player is mafia
 def lynch_player(name):
     global players_alive
     players_alive.remove(name)
+    global votes
     votes = VOTES_RESET.copy()
-    if name in get_mafia_alive():
+    next_night()
+    global mafia_members
+    if name in mafia_members:
         return True
     else:
         return False
@@ -74,14 +76,13 @@ def vote_player(voter, name):
     global players_not_voted
     if voter not in players_not_voted:
         print(f"Error: Voter {voter} already voted")
+        random_speaker()
         return {"lynch": False, "mafia": None, "invalid": True}
-    debug_info()
     players_not_voted.remove(voter)
-    print("voter just removed")
-    debug_info()
     global players_alive
     if name not in players_alive or voter not in players_alive:
         print("Error: Either the voter or name are invalid")
+        random_speaker()
         return {"lynch": False, "mafia": None, "invalid": True}
     else:
         global votes
@@ -91,9 +92,9 @@ def vote_player(voter, name):
             # Return whether the player was mafia
             is_mafia = lynch_player(name)
             if is_mafia:
-                return {"lynch": True, "mafia": True}
+                return {"lynch": True, "mafia": True, "name": name}
             else:
-                return {"lynch": True, "mafia": False}
+                return {"lynch": True, "mafia": False, "name": name}
         else:
             # allow accused to defend themselves
             if votes[name] == 1:
@@ -157,6 +158,7 @@ def kill_player(name):
         return False
 
 def next_night():
+    print("next night called")
     global votes
     votes = VOTES_RESET.copy()
     global protected_players
@@ -169,6 +171,7 @@ def next_night():
     time = "night"
     global speak_forced
     speak_forced = VOTES_RESET.copy()
+    prepare_doctors()
 
 def next_day():
     global day_counter
@@ -192,6 +195,7 @@ def next_day():
     speak_forced = VOTES_RESET.copy()
 
 def prepare_doctors():
+    print("prepare doctors called")
     global players_not_voted
     players_not_voted = get_doctors_alive()
     global protected_players
@@ -202,6 +206,8 @@ def prepare_doctors():
     else:
         global next_speaker
         next_speaker = get_doctors_alive()[0]
+        global group_talking
+        group_talking = "doctors"
 
 def prepare_mafia():
     global players_not_voted
@@ -241,7 +247,13 @@ def protect(name, target):
 def random_speaker():
     global next_speaker
     global players_not_voted
-    next_speaker = random.choice(players_not_voted)
+    if len(players_not_voted) > 0:
+        next_speaker = random.choice(players_not_voted)
+        global time
+    elif time == "day":
+        next_night()
+    else:
+        prepare_detectives()
 
 def force_next_speaker(speaker):
     global next_speaker
