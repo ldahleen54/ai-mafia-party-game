@@ -29,6 +29,7 @@ while(game_state.town_won == None):
             print(f"investigated: {response["investigated"]}")
     elif game_state.time == "day":
         player_message = input(f"time is now day. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
+        response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
 game_state.debug_info()
 
 # client = genai.Client()

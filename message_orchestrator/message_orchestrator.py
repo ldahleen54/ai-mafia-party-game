@@ -93,7 +93,7 @@ def day_commands(name, commands):
                 game_state.next_speaker = target
     elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
         game_state.next_speaker = commands["speak"]
-        speak_forced[commands["speak"]] = speak_forced[commands["speak"]] + 1
+        game_state.speak_forced[commands["speak"]] = game_state.speak_forced[commands["speak"]] + 1
     else:
         game_state.next_speaker = random.choice(game_state.get_players_not_voted())
     return result
