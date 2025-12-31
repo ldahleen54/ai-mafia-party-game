@@ -87,10 +87,7 @@ def day_commands(name, commands):
         target = commands["vote"]
         if target in game_state.get_players_alive():
             result["vote"] = target
-            # let accused defend themselves
-            if game_state.get_votes(target) == 0:
-                game_state.vote_player(name, target)
-                game_state.next_speaker = target
+            game_state.vote_player(name, target)
     elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
         game_state.next_speaker = commands["speak"]
         game_state.speak_forced[commands["speak"]] = game_state.speak_forced[commands["speak"]] + 1

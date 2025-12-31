@@ -95,6 +95,11 @@ def vote_player(voter, name):
             else:
                 return {"lynch": True, "mafia": False}
         else:
+            # allow accused to defend themselves
+            if votes[name] == 1:
+                defend_next_speaker(name)
+            else:
+                random_speaker()
             return {"lynch": False, "mafia": None}
 
 
@@ -110,6 +115,8 @@ def mafia_vote_player(voter, name):
     global players_alive
     if name not in players_alive:
         print("Error: Player is already dead")
+        players_not_voted.remove(voter)
+        random_speaker()
         return {"error": "already_dead"}
     players_not_voted.remove(voter)
     global votes
@@ -129,7 +136,7 @@ def mafia_vote_player(voter, name):
     else:
         print(f"here are the playes not voted {get_players_not_voted()}")
         global next_speaker
-        next_speaker = random.choice(get_players_not_voted())
+        random_speaker()
         return {"ended": False}
 
 # Returns True if player is killed
@@ -230,6 +237,25 @@ def protect(name, target):
     else:
         print("Error: Invalid protection target")
     prepare_mafia()
+
+def random_speaker():
+    global next_speaker
+    global players_not_voted
+    next_speaker = random.choice(players_not_voted)
+
+def force_next_speaker(speaker):
+    global next_speaker
+    global speak_forced
+    # player can only be forced to speak twice
+    if speaker in get_players_alive() and speak_forced[speaker] < 2:
+        next_speaker = speaker
+        return
+    random_speaker()
+
+def defend_next_speaker(speaker):
+    global next_speaker
+    if speaker in get_players_alive():
+        next_speaker = speaker
 
 # DEBUG
 def debug_info():
