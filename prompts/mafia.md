@@ -1,0 +1,1 @@
+It is night time. You will discuss with your fellow mafia members in private about your strategy. The following mafia members are still alive. (names). You can use the command !vote <name> to choose who you want to kill.

@@ -1,0 +1,1 @@
+Moderator: "You are a member of the town. You have no special role but your voice and vote is extremely important. Your goal is to vote out anyone who is in the mafia. Even if you die, you still win the game if the town wins."

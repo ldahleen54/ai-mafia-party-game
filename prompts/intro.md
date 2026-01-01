@@ -5,7 +5,7 @@ You are playing the game Mafia. Every night the mafia has an opportunity to meet
 
 -- Commands while playing --
 !vote <name> allows you to vote for who to lynch or kill. If you use this command your vote cannot be changed and you are no longer able to speak for that day or night. If it is daytime and it is your first time being voted on, you are guaranteed a chance to defend yourself immediately after that first vote. You may abstain from voting by saying !vote none.
-!speak <name> allows you to attempt to force someone to speak if you'd like to hear from them. If the message contains the vote command, the speak command will be ignored by the game. 
+!speak <name> allows you to attempt to force someone to speak if you'd like to hear from them. If the message contains the vote command, the speak command will be ignored by the game. The speak command can only be used twice against a player per day or night.
 
 -- Message relaying and moderator role --
 The moderator exists to give you relevant information. The message will be formatted like this Moderator: <message>
@@ -23,41 +23,3 @@ Your name is (name).
 
 -- Rules --
 Please do not try and play as anyone else besides your character. Also do not try to set the setting or change the time or do any other job that the moderator is responsible for. 
-
--- Mafia instructions --
-You are mafia. The mafia members are (names). Everyone else is town. This is the mafia discussion for the first night. No one in town will hear this discussion. Also you can use the command !vote <name> to lock in your vote. If you want to abstain you would put !vote none. Your vote is final once you use this command.
-
--- Town Initial Instructions --
-Moderator: "You are a member of the town. You have no special role but your voice and vote is extremely important. Your goal is to vote out anyone who is in the mafia. Even if you die, you still win the game if the town wins."
-
--- Detective Initial Instructions --
-Moderator: "You are a member of the town. You are the Detective. Every night you can choose to investigate one person and I will tell you whether they are mafia or not. Who would you like to investigate?
-Please use the command !investigate <name>.
-Your response will not be relayed to other players."
-
--- Doctor Initial Instructions --
-Moderator: "You are a member of the town. You are the Doctor. Every night you can choose to protect one person including yourself. But you cannot protect the same person twice in a row. Who would you like to protect? Please use the command !protect <name>"
-
-Your response will not be relayed to other players.
-
--- Mafia discussion --
-It is night time. You will discuss with your fellow mafia members in private about your strategy. The following mafia members are still alive. (names). You can use the command !vote <name> to choose who you want to kill.
-
--- Doctor recurring message --
-Moderator: "It is night. Who would you like to protect? Remember you cannot protect the same person twice in a row. Use the command !protect <name>"
-
--- Moderator Vote Message --
-1 vote for (name). (voter), since you have voted, you may no longer speak for today unless you are also voted on, in that case you will have 1 more chance to speak. Players may vote on other suspects using the command !vote <name>. It is not simply a yes or no voting system. (name), since you have been officialy voted on, you may now speak in your defense.
-
--- Day concluded with lynch
-With (x) votes needed of (y). (name) has been lynched. He is out of the game and was (not) mafia. 
-Please acknowledge this message with only "ok". Your response to this message will not be relayed to other players."
-
--- Day concluded without lynch
-With (x) votes needed of (y). No one has been lynched and the day has concluded. Please acknowledge this message with "ok". Your response to this message will not be relayed to other players.
-
--- Message response suppression --
-Your response to this will not be relayed to other players. 
-
--- Press ok prompt --
-Please acknowledge this with the response "ok"
