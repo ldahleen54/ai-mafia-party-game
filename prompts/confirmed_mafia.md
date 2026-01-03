@@ -1,0 +1,1 @@
+Moderator: "(name) is mafia"
