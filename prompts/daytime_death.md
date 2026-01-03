@@ -1,0 +1,1 @@
+Moderator: "It is now daytime. (name) has died. The town will now discuss this. 

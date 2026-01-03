@@ -1,10 +1,11 @@
 import random
+from prompt import prompt
 # Constants
 VOTES_RESET = {'Cotton': 0, 'John': 0, 'Samuel': 0, 'William': 0, 'Abigail': 0, 'Ann': 0, 'Betty': 0, 'Sarah': 0, 'Daniel': 0, 'Timothy': 0}
 CHAT_HISTORY_RESET = {'Cotton': '', 'John': '', 'Samuel': '', 'William': '', 'Abigail': '', 'Ann': '', 'Betty': '', 'Sarah': '', 'Daniel': '', 'Timothy': ''}
 
 # Globals
-chat_history = {}
+chat_history = CHAT_HISTORY_RESET.copy()
 players_alive = ["Cotton", "John", "Samuel", "William", "Abigail", "Ann", "Betty", "Sarah", "Daniel", "Timothy"]
 speak_forced = {}
 players_not_voted = []
@@ -54,7 +55,7 @@ def start(total_players, total_mafia, total_detectives, total_doctors):
     global votes
     votes = VOTES_RESET.copy()
     global chat_history
-    chat_history = CHAT_HISTORY_RESET
+    chat_history = CHAT_HISTORY_RESET.copy()
     next_night()
 
 # returns boolean whether player is mafia
@@ -193,6 +194,11 @@ def next_day():
         town_won = True
     global speak_forced
     speak_forced = VOTES_RESET.copy()
+    global player_killed_last_night
+    if player_killed_last_night != "":
+        append_chat_all(prompt.daytime_death())
+    else:
+        append_chat_all(prompt.daytime_no_death())
 
 def prepare_doctors():
     print("prepare doctors called")
@@ -268,6 +274,31 @@ def defend_next_speaker(speaker):
     global next_speaker
     if speaker in get_players_alive():
         next_speaker = speaker
+
+def append_chat(name, message):
+    global chat_history
+    if name in chat_history:
+        chat_history[name] = chat_history[name] + "\n\n" + message
+
+def append_chat_all(message):
+    global chat_history
+    for name in chat_history:
+        chat_history[name] = chat_history[name] + "\n\n" + message
+
+def append_chat_except(speaker, message):
+    global chat_history
+    for name in chat_history:
+        if name != speaker
+            chat_history[name] = chat_history[name] + "\n\n" + message
+
+def clear_chat_all():
+    global chat_history
+    chat_history = CHAT_HISTORY_RESET.copy()
+
+def clear_chat(name):
+    global chat_history
+    chat_history[name] = ""
+
 
 # DEBUG
 def debug_info():
