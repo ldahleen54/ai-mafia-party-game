@@ -17,7 +17,6 @@ game_state.debug_clear_mafia()
 game_state.debug_add_mafia("Cotton")
 game_state.debug_add_mafia("Ann")
 game_state.debug_add_mafia("Samuel")
-
 # giving the players the intro
 for name in game_state.get_players_alive():
     intro = message_sync.general_intro().replace("(name)", name)
@@ -25,9 +24,9 @@ for name in game_state.get_players_alive():
     if name in game_state.get_doctors_alive():
         game_state.chat_history[name] = game_state.chat_history[name] + "\n\n" + message_sync.doctors_intro()
     elif name in game_state.get_mafia_alive():
-        mafia_names = ""
-        for name in game_state.get_mafia_alive():
-            mafia_names = mafia_names + name
+        mafia_names = ""        
+        for member in game_state.get_mafia_alive():
+            mafia_names = mafia_names + member + ", "
         game_state.chat_history[name] = game_state.chat_history[name] + "\n\n" + message_sync.mafia_intro().replace("(names)", mafia_names)
     elif name in game_state.get_detectives_alive():
         game_state.chat_history[name] = game_state.chat_history[name] + "\n\n" + message_sync.detectives_intro()
@@ -42,10 +41,13 @@ while(game_state.town_won == None):
     if game_state.time == "night":
         player_message = input(game_state.chat_history[game_state.next_speaker])
         response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
-        if "investigated" in response:
-            print(f"investigated: {response["investigated"]}")
+        if "investigated" in response and "is_mafia" in response:
+            if response["is_mafia"] == True:
+                game_state.chat_history[response["detective"]] = game_state.chat_history[response["detective"]] + "\n\n" + message_sync.confirmed_mafia().replace("(name)", response["investigated"])
+            else:
+                game_state.chat_history[response["detective"]] = game_state.chat_history[response["detective"]] + "\n\n" + message_sync.not_mafia().replace("(name)", response["investigated"])
     elif game_state.time == "day":
-        player_message = input(f"time is now day. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
+        player_message = input(f"{game_state.chat_history[game_state.next_speaker]} \n\ntime is now day. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
         response = message_orchestrator.message(game_state.get_next_speaker(), player_message)
         if "lynch" in response and response["lynch"] == True:
             print(f"{response["name"]} has been lynched")

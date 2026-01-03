@@ -3,6 +3,8 @@ doctor_intro_file_path = 'prompts/doctors.md'
 mafia_intro_file_path = 'prompts/mafia.md'
 detectives_intro_file_path = 'prompts/detectives.md'
 town_intro_file_path = 'prompts/town.md'
+confirmed_mafia_file_path = 'prompts/confirmed_mafia.md'
+not_mafia_file_path = 'prompts/not_mafia.md'
 
 def general_intro():
     try:
@@ -53,3 +55,23 @@ def town_intro():
         print(f"Error: The file '{town_intro_file_path}' was not found.")
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{town_intro_file_path}'.")
+
+def confirmed_mafia():
+    try:
+        with open(confirmed_mafia_file_path) as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        print(f"Error: The file '{confirmed_mafia_file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: You do not have permission to read the file '{confirmed_mafia_file_path}'.")
+    
+def not_mafia():
+    try:
+        with open(not_mafia_file_path) as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        print(f"Error: The file '{not_mafia_file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: You do not have permission to read the file '{not_mafia_file_path}'.")

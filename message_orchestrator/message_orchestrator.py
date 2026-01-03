@@ -74,7 +74,9 @@ def night_commands(name, commands):
     elif game_state.group_talking == "detectives": 
         if commands != None and "investigate" in commands and name in game_state.get_detectives(): 
             is_mafia = game_state.investigate(name, commands["investigate"])
-            result["investigated"] = {commands["investigate"]: is_mafia}
+            result["investigated"] = commands["investigate"]
+            result["is_mafia"] = is_mafia
+            result["detective"] = name
         else:
             game_state.next_day()
     return result
