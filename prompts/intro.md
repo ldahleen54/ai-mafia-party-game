@@ -17,7 +17,7 @@ Because of these message limitations, being quiet is never a suspicious action. 
 There are (10) total players
 There are (3) mafia members in this game.
 There is (1) Doctor.
-There is (1) Sherrif. 
+There is (1) Detective. 
 Names of the players are Cotton, John, Samuel, William, Abigail, Ann, Betty, Sarah, Daniel, Timothy
 Your name is (name).
 

@@ -196,7 +196,7 @@ def next_day():
     speak_forced = VOTES_RESET.copy()
     global player_killed_last_night
     if player_killed_last_night != "":
-        append_chat_all(prompt.daytime_death())
+        append_chat_all(prompt.daytime_death(player_killed_last_night))
     else:
         append_chat_all(prompt.daytime_no_death())
 
@@ -253,14 +253,18 @@ def protect(name, target):
 def random_speaker():
     global next_speaker
     global players_not_voted
+    global time
     if len(players_not_voted) > 0:
-        next_speaker = random.choice(players_not_voted)
-        global time
+        new_speaker = next_speaker
+        while(new_speaker == next_speaker):
+            new_speaker = random.choice(players_not_voted)
+        next_speaker = new_speaker
     elif time == "day":
         next_night()
     else:
         prepare_detectives()
 
+# force by using the !speak command
 def force_next_speaker(speaker):
     global next_speaker
     global speak_forced
@@ -288,7 +292,7 @@ def append_chat_all(message):
 def append_chat_except(speaker, message):
     global chat_history
     for name in chat_history:
-        if name != speaker
+        if name != speaker:
             chat_history[name] = chat_history[name] + "\n\n" + message
 
 def clear_chat_all():
@@ -298,7 +302,6 @@ def clear_chat_all():
 def clear_chat(name):
     global chat_history
     chat_history[name] = ""
-
 
 # DEBUG
 def debug_info():

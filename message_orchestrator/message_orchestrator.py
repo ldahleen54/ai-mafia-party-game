@@ -60,10 +60,9 @@ def night_commands(name, commands):
             target = commands["vote"]
             result = game_state.mafia_vote_player(name, target)
         elif commands != None and "speak" in commands and commands["speak"] in game_state.players_not_voted and game_state.speak_forced[commands["speak"]] < 2:
-            game_state.next_speaker = commands["speak"]
-            game_state.speak_forced[commands["speak"]] = game_state.speak_forced[commands["speak"]] + 1
+            game_state.force_next_speaker(commands["speak"])
         else:
-            game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+            game_state.random_speaker()
     elif game_state.group_talking == "doctors" and name in game_state.get_doctors():
         # If the doctor doesn't give a valid command just continue
         if commands == None or "protect" not in commands:
@@ -88,8 +87,7 @@ def day_commands(name, commands):
         result["vote"] = target
         game_state.vote_player(name, target)
     elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
-        game_state.next_speaker = commands["speak"]
-        game_state.speak_forced[commands["speak"]] = game_state.speak_forced[commands["speak"]] + 1
+        game_state.force_next_speaker(commands["speak"])
     else:
-        game_state.next_speaker = random.choice(game_state.get_players_not_voted())
+        game_state.random_speaker()
     return result

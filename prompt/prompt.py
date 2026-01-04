@@ -7,6 +7,7 @@ confirmed_mafia_file_path = 'prompts/confirmed_mafia.md'
 not_mafia_file_path = 'prompts/not_mafia.md'
 daytime_death_file_path = 'prompts/daytime_death.md'
 daytime_no_death_file_path = 'prompts/daytime_no_death.md'
+your_turn_file_path = 'prompts/your_turn.md'
 
 def general_intro():
     try:
@@ -58,31 +59,31 @@ def town_intro():
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{town_intro_file_path}'.")
 
-def confirmed_mafia():
+def confirmed_mafia(name):
     try:
         with open(confirmed_mafia_file_path) as file:
             content = file.read()
-            return content
+            return content.replace("(name)", name)
     except FileNotFoundError:
         print(f"Error: The file '{confirmed_mafia_file_path}' was not found.")
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{confirmed_mafia_file_path}'.")
     
-def not_mafia():
+def not_mafia(name):
     try:
         with open(not_mafia_file_path) as file:
             content = file.read()
-            return content
+            return content.replace("(name)", name)
     except FileNotFoundError:
         print(f"Error: The file '{not_mafia_file_path}' was not found.")
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{not_mafia_file_path}'.")
 
-def daytime_death():
+def daytime_death(name):
     try:
         with open(daytime_death_file_path) as file:
             content = file.read()
-            return content
+            return content.replace("(name)", name)
     except FileNotFoundError:
         print(f"Error: The file '{daytime_death_file_path}' was not found.")
     except PermissionError:
@@ -97,3 +98,13 @@ def daytime_no_death():
         print(f"Error: The file '{daytime_no_death_file_path}' was not found.")
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{daytime_no_death_file_path}'.")
+
+def your_turn(name):
+    try:
+        with open(your_turn_file_path) as file:
+            content = file.read()
+            return content.replace("(name)", name)
+    except FileNotFoundError:
+        print(f"Error: The file '{your_turn_file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: You do not have permission to read the file '{your_turn_file_path}'.")

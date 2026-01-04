@@ -39,16 +39,18 @@ while(game_state.town_won == None):
         exit()
     current_speaker = game_state.next_speaker
     if game_state.time == "night":
+        game_state.append_chat(current_speaker, prompt.your_turn(current_speaker))
         player_message = input(game_state.chat_history[current_speaker])
         game_state.clear_chat(current_speaker)
         response = message_orchestrator.message(current_speaker, player_message)
         if "investigated" in response and "is_mafia" in response:
             if response["is_mafia"] == True:
-                game_state.append_chat(current_speaker, prompt.confirmed_mafia().replace("(name)", response["investigated"]))
+                game_state.append_chat(current_speaker, prompt.confirmed_mafia(response["investigated"]))
             else:
-                game_state.append_chat(current_speaker, prompt.not_mafia().replace("name", response["investigated"]))
+                game_state.append_chat(current_speaker, prompt.not_mafia(response["investigated"]))
     elif game_state.time == "day":
-        player_message = input(f"{game_state.chat_history[game_state.next_speaker]} \n\nIt is daytime. The town is meeting for discussion. {game_state.get_next_speaker()}, it is your turn to speak or vote.")
+        game_state.append_chat(current_speaker, prompt.your_turn(current_speaker))
+        player_message = input(game_state.chat_history[current_speaker])
         game_state.clear_chat(current_speaker)
         response = message_orchestrator.message(current_speaker, player_message)
         if "lynch" in response and response["lynch"] == True:
