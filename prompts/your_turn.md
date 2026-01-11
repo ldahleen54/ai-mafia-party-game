@@ -1,1 +1,1 @@
-Moderator: "(name) it is your turn to speak."
+Moderator: "(name) it is your turn to speak. Please keep your response under 200 characters."
