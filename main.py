@@ -3,6 +3,7 @@ from game_state import game_state
 from message_orchestrator import message_orchestrator
 import random
 from prompt import prompt
+import os
 
 # configs
 total_players = 10
@@ -11,12 +12,6 @@ total_detectives = 1
 total_doctors = 1
 
 game_state.start(total_players, total_mafia_members, total_detectives, total_detectives)
-
-# Debug commands
-game_state.debug_clear_mafia()
-game_state.debug_add_mafia("Cotton")
-game_state.debug_add_mafia("Ann")
-game_state.debug_add_mafia("Samuel")
 # give every player the introduction and game instructions
 
 for name in game_state.get_players_alive():
@@ -40,6 +35,7 @@ while(game_state.town_won == None):
     current_speaker = game_state.next_speaker
     if game_state.time == "night":
         game_state.append_chat(current_speaker, prompt.your_turn(current_speaker))
+        os.system('clear')
         player_message = input(game_state.chat_history[current_speaker])
         game_state.clear_chat(current_speaker)
         response = message_orchestrator.message(current_speaker, player_message)
@@ -50,15 +46,16 @@ while(game_state.town_won == None):
                 game_state.append_chat(current_speaker, prompt.not_mafia(response["investigated"]))
     elif game_state.time == "day":
         game_state.append_chat(current_speaker, prompt.your_turn(current_speaker))
+        os.system('clear')
         player_message = input(game_state.chat_history[current_speaker])
         game_state.clear_chat(current_speaker)
         response = message_orchestrator.message(current_speaker, player_message)
         if "lynch" in response and response["lynch"] == True:
-            print(f"{response["name"]} has been lynched")
+            game_state.append_chat_all(f"{response["name"]} has been lynched. They are out of the game")
             if response["mafia"] == True:
-                print(f"Moderator: {response["name"]} was mafia")
+                game_state.append_chat_all(f"{response["name"]} was mafia")
             else:
-                print(f"Moderator: {response["name"]} was not mafia")
+                game_state.append_chat_all(f"{response["name"]} was not mafia")
 
 # client = genai.Client()
 

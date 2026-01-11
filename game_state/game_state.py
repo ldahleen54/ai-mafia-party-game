@@ -199,6 +199,7 @@ def next_day():
         append_chat_all(prompt.daytime_death(player_killed_last_night))
     else:
         append_chat_all(prompt.daytime_no_death())
+    random_speaker()
 
 def prepare_doctors():
     print("prepare doctors called")
@@ -294,6 +295,13 @@ def append_chat_except(speaker, message):
     for name in chat_history:
         if name != speaker:
             chat_history[name] = chat_history[name] + "\n\n" + message
+
+def append_mafia_chat(speaker, message):
+    global chat_history
+    global mafia_members
+    for name in mafia_members:
+        if name != speaker:
+            append_chat(name, f"{speaker}: " + message)
 
 def clear_chat_all():
     global chat_history
