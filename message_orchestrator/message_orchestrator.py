@@ -38,8 +38,11 @@ def message(name, message):
     commands = parse_commands(message)
     result = {}
     if game_state.get_time() == 'night':
+        if name in game_state.get_mafia_alive():
+            game_state.append_mafia_chat(name, message)
         result = night_commands(name, commands)
     elif game_state.get_time() == 'day':
+        game_state.append_chat_except(name, f"{name}: " + message)
         result = day_commands(name, commands)
     else:
         print("Error: Invalid time")
@@ -85,7 +88,14 @@ def day_commands(name, commands):
     if commands != None and "vote" in commands:
         target = commands["vote"]
         result["vote"] = target
-        game_state.vote_player(name, target)
+        vote_result = game_state.vote_player(name, target)
+        if "lynch" in vote_result and vote_result["lynch"] == True:
+            result["lynch"] = True
+            result["name"] = vote_result["name"]
+            if "mafia" in vote_result and vote_result["mafia"] == True:
+                result["mafia"] = True
+            else:
+                result["mafia"] = False
     elif commands != None and "speak" in commands and commands["speak"] in game_state.get_players_alive() and commands["speak"] in game_state.get_players_not_voted():
         game_state.force_next_speaker(commands["speak"])
     else:

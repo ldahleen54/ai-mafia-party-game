@@ -1,0 +1,1 @@
+Moderator: "The town discussion ends for today. It is night time once again."

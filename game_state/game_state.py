@@ -125,7 +125,7 @@ def mafia_vote_player(voter, name):
     global current_votes
     current_votes = votes[name]
     votes[name] = votes[name] + 1
-    if votes[name] / len(mafia_members) > 0.5:
+    if votes[name] / len(get_mafia_alive()) > 0.5:
         attempt = kill_player(name)
         prepare_detectives()
         if attempt == True:
@@ -172,6 +172,9 @@ def next_night():
     time = "night"
     global speak_forced
     speak_forced = VOTES_RESET.copy()
+    global day_counter
+    if day_counter >= 1:
+        append_chat_all(prompt.next_night())
     prepare_doctors()
 
 def next_day():
@@ -202,7 +205,7 @@ def next_day():
     random_speaker()
 
 def prepare_doctors():
-    print("prepare doctors called")
+    print("prepare doctors function called")
     global players_not_voted
     players_not_voted = get_doctors_alive()
     global protected_players
@@ -215,14 +218,17 @@ def prepare_doctors():
         next_speaker = get_doctors_alive()[0]
         global group_talking
         group_talking = "doctors"
+        append_chat(get_doctors_alive()[0], prompt.doctors_again(get_doctors_alive()[0]))
 
 def prepare_mafia():
+    print("prepare mafia")
     global players_not_voted
     players_not_voted = get_mafia_alive()
     global next_speaker
     next_speaker = random.choice(players_not_voted)
     global group_talking
     group_talking = "mafia"
+    append_mafia_chat_all(prompt.mafia_intro(get_mafia_alive()))
 
 def prepare_detectives():
     global players_not_voted
@@ -232,6 +238,7 @@ def prepare_detectives():
         next_speaker = players_not_voted[0]
         global group_talking
         group_talking = "detectives"
+        append_chat(players_not_voted[0], prompt.detectives_again(players_not_voted[0]))
     else:
         next_day()
 
@@ -302,6 +309,12 @@ def append_mafia_chat(speaker, message):
     for name in mafia_members:
         if name != speaker:
             append_chat(name, f"{speaker}: " + message)
+
+def append_mafia_chat_all(message):
+    global chat_history
+    global mafia_members
+    for name in mafia_members:
+        append_chat(name, message)
 
 def clear_chat_all():
     global chat_history
