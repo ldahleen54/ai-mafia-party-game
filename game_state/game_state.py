@@ -148,7 +148,7 @@ def kill_player(name):
     global protected_players
     player_killed_last_night = ""
     # Make sure the player wasn't protected
-    if name not in protected_players:    
+    if name not in protected_players:
         global players_alive
         players_alive.remove(name)
         player_killed_last_night = name
@@ -159,7 +159,13 @@ def kill_player(name):
         return False
 
 def next_night():
-    print("next night called")
+    global town_won
+    # Check if mafia won
+    if len(get_mafia_alive()) / len(get_players_alive()) >= 0.5:
+        town_won = False
+    # check if town won
+    if len(get_mafia_alive()) <= 0 and len(get_players_alive()) > 0:
+        town_won = True
     global votes
     votes = VOTES_RESET.copy()
     global protected_players
@@ -205,7 +211,6 @@ def next_day():
     random_speaker()
 
 def prepare_doctors():
-    print("prepare doctors function called")
     global players_not_voted
     players_not_voted = get_doctors_alive()
     global protected_players
@@ -221,7 +226,6 @@ def prepare_doctors():
         append_chat(get_doctors_alive()[0], prompt.doctors_again(get_doctors_alive()[0]))
 
 def prepare_mafia():
-    print("prepare mafia")
     global players_not_voted
     players_not_voted = get_mafia_alive()
     global next_speaker

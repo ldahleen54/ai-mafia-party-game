@@ -11,6 +11,7 @@ your_turn_file_path = 'prompts/your_turn.md'
 next_night_file_path = 'prompts/next_night.md'
 doctors_again_file_path = 'prompts/doctors_again.md'
 detectives_again_file_path = 'prompts/detectives_again.md'
+winner_file_path = 'prompts/winner.md'
 
 def general_intro():
     try:
@@ -145,3 +146,16 @@ def doctors_again(name):
         print(f"Error: The file '{doctors_again_file_path}' was not found.")
     except PermissionError:
         print(f"Error: You do not have permission to read the file '{doctors_again_file_path}'.")
+
+def winner(winner, names):
+    try:
+        with open(winner_file_path) as file:
+            content = file.read()
+            name_list = ""
+            for name in names:
+                name_list = name_list + name + ", "
+            return content.replace("(winner)", winner).replace("(names)", name_list)
+    except FileNotFoundError:
+        print(f"Error: The file '{winner_file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: You do not have permission to read the file '{winner_file_path}'.")

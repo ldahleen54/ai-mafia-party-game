@@ -1,0 +1,1 @@
+Moderator: "The (winner) has won. The following players were mafia (names). Everyone else was town"

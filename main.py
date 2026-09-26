@@ -57,6 +57,11 @@ while(game_state.town_won == None):
             else:
                 game_state.append_chat_all(f"Moderator: \"{response["name"]} was not mafia\"")
 
+if game_state.town_won == True:
+    print(prompt.winner("Town", game_state.mafia_members))
+else:
+    print(prompt.winner("Mafia", game_state.mafia_members))
+
 # client = genai.Client()
 
 # response = client.models.generate_content(

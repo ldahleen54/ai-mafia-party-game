@@ -25,3 +25,6 @@ There are commands that players can use to interact with the game mechanics
 main.py
 game_state module handles the game state. Such as players alive, day counter, votes etc.
 message_parser module interprets messages for commands to change the game state and decide who can speak next
+
+# Bugs and issues
+Game needs to announce the winner and who was mafia
